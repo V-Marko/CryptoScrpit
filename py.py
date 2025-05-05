@@ -1,6 +1,5 @@
 from flask import Flask, render_template
 from flask_socketio import SocketIO, emit
-import threading
 import websocket
 import json
 
@@ -9,15 +8,22 @@ socketio = SocketIO(app)
 
 def start_ws():
     def on_message(ws, message):
-        data = json.loads(message)
-        price = data['p']
-        socketio.emit('btc_price', {'price': price})
+        try:
+            print("Получено сообщение:", message)  
+            data = json.loads(message)
+            price = data.get('p')  
+            if price is not None:
+                socketio.emit('btc_price', {'price': price}, namespace='/')
+            else:
+                print("Ошибка: поле 'p' отсутствует в данных")
+        except Exception as e:
+            print("Ошибка обработки сообщения:", e)
 
     def on_error(ws, error):
-        print("Ошибка:", error)
+        print("Ошибка WebSocket:", error)
 
-    def on_close(ws):
-        print("Соединение закрыто")
+    def on_close(ws, close_status_code, close_msg):
+        print(f"Соединение закрыто: код={close_status_code}, сообщение={close_msg}")
 
     def on_open(ws):
         print("Соединение WebSocket открыто")
@@ -34,5 +40,5 @@ def index():
     return render_template('index.html')
 
 if __name__ == '__main__':
-    threading.Thread(target=start_ws).start()
+    socketio.start_background_task(start_ws)
     socketio.run(app, debug=True)

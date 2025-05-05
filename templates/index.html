@@ -1,24 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crypto</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.0/socket.io.js"></script>
     <link rel="stylesheet" href="/static/style.css">
 </head>
-
 <body>
     <h1 class="CryptoText">Crypto</h1>
-
     <div class="AllCrypto">
         <div class="BTC CryptoValue">
-            <img src="/static/BTC.png" alt="">
+            <img src="/static/BTC.png" alt="Bitcoin">
             <p>Bitcoin</p>
-            <p class = "Value"> $ 94,704.932</p>
+            <p class="Value">$ <span id="price">-</span></p>
         </div>
     </div>
-    <script src="/js.js"></script>
+    <script src="/static/js.js"></script>
 </body>
-
 </html>
